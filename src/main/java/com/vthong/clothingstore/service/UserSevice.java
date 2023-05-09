@@ -1,6 +1,7 @@
 package com.vthong.clothingstore.service;
 
 import java.util.Calendar;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.vthong.clothingstore.entity.Customers;
+import com.vthong.clothingstore.entity.PasswordResetToken;
 import com.vthong.clothingstore.entity.User;
 import com.vthong.clothingstore.entity.VerificationToken;
 import com.vthong.clothingstore.enums.UserRole;
 import com.vthong.clothingstore.model.UserModel;
+import com.vthong.clothingstore.repository.PasswordResetTokenRepository;
 import com.vthong.clothingstore.repository.UserRepository;
 import com.vthong.clothingstore.repository.VeriFicationTokenRepository;
 
@@ -24,6 +27,9 @@ public class UserSevice {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordResetTokenRepository passwordResetTokenRepository;
 	
 	@Autowired
 	private CustomerService customerService;
@@ -93,7 +99,7 @@ public class UserSevice {
 		
 		String url = applicationUrl +
 					"/"+
-					"verifyRegistration?token="+
+					"verifyregistration?token="+
 					verificationToken.getToken();
 		log.info("Click the link to verify account: {}", url);
 	}
@@ -105,9 +111,66 @@ public class UserSevice {
 				request.getServerPort() + 
 				request.getContextPath();
 	}
+
+	public User findUserByUserName(String userName) {
+		User user = userRepository.findByUserName(userName);
+		return user;
+	}
+
+	public void createPasswordResetTokenForUser(User user, String token) {
+		PasswordResetToken passwordResetToken =
+					new PasswordResetToken(user, token);
+		
+		passwordResetTokenRepository.save(passwordResetToken);
+		
+	}
+
+	public String passwordResetTokenEmail(User user, String applicationUrl,
+				String token) {
+		
+		String url = applicationUrl +
+				"/"+
+				"savepassword?token="+
+				token;
+		log.info("Click the link to Reset you password: {}", url);
+		return url;
+	}
+
+	public String validatePasswordResetToken(String token) {
+		
+		PasswordResetToken passwordResetToken = 
+				passwordResetTokenRepository.findByToken(token);
+		
+		if(passwordResetToken == null)
+			return "invalid";
+		
+		User user = passwordResetToken.getUser();
+		Calendar calen = Calendar.getInstance();
+		
+		if((passwordResetToken.getExpirationTime().getTime() - 
+				calen.getTime().getTime()) <= 0) {
+			passwordResetTokenRepository.delete(passwordResetToken);
+			return "expired";
+		}
+		
+			
+		return "valid";
+	}
+
+	public Optional<User> getUserByPasswordResetToken(String token) {
+		return Optional.ofNullable(passwordResetTokenRepository.findByToken(token).getUser());
+	}
+
+	public void changePassword(User user, String newPassword) {
+		user.setPassword(passwordEncoder.encode(newPassword));
+		userRepository.save(user);
+		
+	}
+
+	public boolean checkIfValidOldPasswrod(String oldPassword, User user) {
+		
+		return passwordEncoder.matches(oldPassword, user.getPassword());
+	}
 	
-//	@Override
-//	public User registerUser() {
-//	
-//	}
+
 }

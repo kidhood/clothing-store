@@ -30,7 +30,7 @@ public class RegistrationCompleteEvenListener implements
 			String url = 
 						event.getApplicationUrl() +
 						"/"+
-						"verifyRegistration?token="
+						"verifyregistration?token="
 						+ token;
 			log.info("Click the link {}", url);
 	}

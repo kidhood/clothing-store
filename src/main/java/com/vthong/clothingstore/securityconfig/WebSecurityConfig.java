@@ -20,8 +20,8 @@ public class WebSecurityConfig {
 			"/hello",
 			"/register",
 			"/h2-console",
-			"/verifyRegistration*",
-			"/resendVerifyToken*"
+			"/verifyregistration*",
+			"/resendverifyToken*"
 			
 	};
 	

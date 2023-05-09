@@ -1,6 +1,8 @@
 package com.vthong.clothingstore.controller;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.vthong.clothingstore.entity.User;
 import com.vthong.clothingstore.entity.VerificationToken;
 import com.vthong.clothingstore.event.RegistrationCompleteEvent;
+import com.vthong.clothingstore.model.PasswordModel;
 import com.vthong.clothingstore.model.UserModel;
 import com.vthong.clothingstore.repository.UserRepository;
 import com.vthong.clothingstore.service.UserSevice;
@@ -46,7 +49,7 @@ public class UserController {
 		return "Success";
 	}
 	
-	@GetMapping("/verifyRegistration")
+	@GetMapping("/verifyregistration")
 	public String verifyRegistration(@RequestParam("token") String token) {
 		String result = userSevice.validateVerificationToken(token);
 		if(result.equalsIgnoreCase("valid"))
@@ -54,7 +57,7 @@ public class UserController {
 		return "Bad User " + result;
 	}
 	
-	@GetMapping("/resendVerifyToken")
+	@GetMapping("/resendverifyToken")
 	public String resendVerificationToken(@RequestParam("token") String oldToken,
 			HttpServletRequest request) {
 		
@@ -71,5 +74,49 @@ public class UserController {
 		 return "Verification Link sent";
 	}
 	
+	@PostMapping("/resetpassword")
+	public String resetPassword(@RequestBody PasswordModel passwordModel,
+			HttpServletRequest request) {
+		
+		User user = userSevice.findUserByUserName(passwordModel.getUserName());
+		String url = "";
+		if(user != null) {
+			String token = UUID.randomUUID().toString();
+			userSevice.createPasswordResetTokenForUser(user, token);
+			url = userSevice.passwordResetTokenEmail(user,
+					userSevice.applicationUrl(request), token);
+		}
+		return url;
+	}
 	
+	@PostMapping("/savepassword")
+	public String savePassword(@RequestParam("token")String token, 
+					@RequestBody PasswordModel passwordModel) {
+		
+		 String result = userSevice.validatePasswordResetToken(token);
+		 if(!result.equalsIgnoreCase("valid")) {
+			 return "Invalid Token";
+		 }
+
+		 Optional<User> user = userSevice.getUserByPasswordResetToken(token);
+		 if(user.isPresent()) {
+			 userSevice.changePassword(user.get(), passwordModel.getNewPassword());
+			 return "Password Reset Successfully";
+		 }else {
+			 return  "Invalid Token";
+		 }
+	}
+	
+	@PostMapping("/changepassword")
+	public String changePassword(@RequestBody PasswordModel passwordModel) {
+		User user = userSevice.findUserByUserName(passwordModel.getUserName());
+		if(!userSevice.checkIfValidOldPasswrod(passwordModel.getOldPassword(),user)) {
+			return "Invvalid Old password";
+		}
+		
+		//save new password
+		userSevice.changePassword(user, passwordModel.getNewPassword());
+		return "Password Change Succesfully";
+	}
+
 }
