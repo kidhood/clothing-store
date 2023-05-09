@@ -9,4 +9,6 @@ import com.vthong.clothingstore.entity.VerificationToken;
 public interface VeriFicationTokenRepository extends
 		JpaRepository<VerificationToken, Long>{
 
+	VerificationToken findByToken(String token);
+
 }

@@ -11,13 +11,13 @@ values (1003,'cu3', 'hehe','cu3@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DA
 
 -- ACCOUNT
 
-insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,IS_DELETE ) 
+insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,ENABLE ) 
 values (1001, 'sa', '1','US',1001,false);
 
-insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,IS_DELETE ) 
+insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,ENABLE ) 
 values (1002, 'sa', '1','US',1002,false);
 
-insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,IS_DELETE ) 
+insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,ENABLE ) 
 values (1003, 'ad', '1','AD',1003,false);
 
 -- CATEGORIES

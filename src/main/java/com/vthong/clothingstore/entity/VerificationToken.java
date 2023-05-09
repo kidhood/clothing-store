@@ -1,7 +1,8 @@
 package com.vthong.clothingstore.entity;
 
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Calendar;
+import java.util.Date;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ForeignKey;
@@ -12,10 +13,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Data
 @NoArgsConstructor
+@Slf4j
 public class VerificationToken {
 	
 	//Expiration time 10 minutes
@@ -46,10 +49,10 @@ public class VerificationToken {
 		this.expirationTime = calculateExpirationDate(EXPIRATION_TIME);
 	}
 
-	private Date calculateExpirationDate(int expirationTime2) {
+	private Date calculateExpirationDate(int expirationTime) {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-		calendar.add(calendar.MINUTE, EXPIRATION_TIME);
-		return new Date(calendar.getTime().getTime());
+		calendar.add(calendar.SECOND, expirationTime*60);
+		return new Date(calendar.getTimeInMillis());
 	}
 }

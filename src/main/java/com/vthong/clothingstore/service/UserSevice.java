@@ -1,5 +1,8 @@
 package com.vthong.clothingstore.service;
 
+import java.util.Calendar;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,7 +15,11 @@ import com.vthong.clothingstore.model.UserModel;
 import com.vthong.clothingstore.repository.UserRepository;
 import com.vthong.clothingstore.repository.VeriFicationTokenRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class UserSevice {
 	
 	@Autowired
@@ -22,7 +29,7 @@ public class UserSevice {
 	private CustomerService customerService;
 	
 	@Autowired
-	private VeriFicationTokenRepository veriFicationTokenRepository;
+	private VeriFicationTokenRepository verificationTokenRepository;
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -49,8 +56,54 @@ public class UserSevice {
 	public void saveVerificationTokenForUser(String token, User user) {
 		VerificationToken verificationToken = 
 					new VerificationToken(user, token);
-		veriFicationTokenRepository.save(verificationToken );
+		verificationTokenRepository.save(verificationToken );
 		
+		
+	}
+
+	public String validateVerificationToken(String token) {
+		VerificationToken verificationToken = verificationTokenRepository.findByToken(token);
+		if(verificationToken == null)
+			return "invalid";
+		User user = verificationToken.getUser();
+		Calendar calen = Calendar.getInstance();
+		
+		if((verificationToken.getExpirationTime().getTime() - 
+				calen.getTime().getTime()) <= 0) {
+			verificationTokenRepository.delete(verificationToken);
+			return "expired";
+		}
+		
+		user.setEnable(true);
+		userRepository.save(user);
+			
+		return "valid";
+	}
+
+	public VerificationToken resendVerificationToken(String oldToken) {
+		VerificationToken verificationToken = 
+				verificationTokenRepository.findByToken(oldToken);
+		verificationToken.setToken(UUID.randomUUID().toString());
+		verificationTokenRepository.save(verificationToken);
+		return verificationToken;
+	}
+
+	public void resendVerificationTokenMail(User user, String applicationUrl,
+			VerificationToken verificationToken) {
+		
+		String url = applicationUrl +
+					"/"+
+					"verifyRegistration?token="+
+					verificationToken.getToken();
+		log.info("Click the link to verify account: {}", url);
+	}
+
+	public String applicationUrl(HttpServletRequest request) {
+		return "http://" + 
+				request.getServerName() + 
+				":" +
+				request.getServerPort() + 
+				request.getContextPath();
 	}
 	
 //	@Override

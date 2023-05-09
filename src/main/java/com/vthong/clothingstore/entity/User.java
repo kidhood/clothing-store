@@ -38,7 +38,7 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
 	
-	private Boolean isDelete;
+	private Boolean enable;
 	
 	@OneToOne(fetch =  FetchType.LAZY)
 	@JoinColumn(name = "CUSTOMER_ID")

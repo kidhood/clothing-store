@@ -4,15 +4,16 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
 import com.vthong.clothingstore.entity.User;
 import com.vthong.clothingstore.event.RegistrationCompleteEvent;
-import com.vthong.clothingstore.repository.VeriFicationTokenRepository;
 import com.vthong.clothingstore.service.UserSevice;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Component
 public class RegistrationCompleteEvenListener implements
 	ApplicationListener<RegistrationCompleteEvent>{
 	
@@ -28,7 +29,8 @@ public class RegistrationCompleteEvenListener implements
 		//send mail to user
 			String url = 
 						event.getApplicationUrl() +
-						"verifiRegistration?token="
+						"/"+
+						"verifyRegistration?token="
 						+ token;
 			log.info("Click the link {}", url);
 	}
