@@ -137,6 +137,8 @@ const Button = styled.button`
 
   const [isSetProduct, setIsSetProduct] = useState(false)
 
+  const [size, setSize] = useState('')
+
   useEffect( () => {
     refreshProduct();
     }, [id] )
@@ -192,7 +194,7 @@ const Button = styled.button`
             </Filter>
             <Filter>
               <FilterTitle>Size</FilterTitle>
-              <FilterSize>
+              <FilterSize onChange={e => setSize(e.target.value)}>
                 {isSetProduct &&
                   product.sizes.map(
                     size => (
@@ -215,7 +217,7 @@ const Button = styled.button`
                 <Add />
               </Button>
             </AmountContainer>
-            <Button onClick={ () => authContext.addToCart(product)}>ADD TO CART</Button>
+            <Button onClick={ () => authContext.addToCart(product, size === "" ? 'M' : size,amount  )}>ADD TO CART</Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>

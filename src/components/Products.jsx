@@ -11,18 +11,20 @@ const Container = styled.div`
     justify-content: space-between;
 `
 
-const Products = () => {
+const Products = (props) => {
   const [products, setProducts] = useState([])
 
   const [isSetProducts,  setIsSetProducts] = useState(false)
 
-  useEffect( () => {refreshProductList()} , [] )
+  const filterBySize = props.filterBySize
+
+  useEffect( () => {refreshProductList()
+                     } , [filterBySize] )
 
   async function refreshProductList(){
     await retrieveProducts()
           .then(response => {
               setProducts(response.data)
-              console.log(response.data)
               setIsSetProducts(true)
           }
           )
@@ -31,7 +33,10 @@ const Products = () => {
 
   return (
     <Container>
-        {products.map((item) => (
+        {products.filter( (item) => {
+            return filterBySize === "" ? item : item.sizes.some( size  => size.sizeName === filterBySize)
+        }       
+        ).map((item) => (
             <Product item = {item} key={item.productID}/>
         ))}
     </Container>

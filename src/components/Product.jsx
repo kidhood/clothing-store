@@ -83,7 +83,7 @@ const Product = ({item}) => {
         <Circle/>
         <Image src={item.imageUrl} />
         <Info>
-            <Icon onClick={ () => authContext.addToCart(item)}>
+            <Icon onClick={ () => authContext.addToCart(item, 'M', 1)}>
                 <ShoppingCartOutlined/>
             </Icon>
             <Icon onClick={ () => showMoreInfor(item.productID) }>

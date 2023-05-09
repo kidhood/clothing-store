@@ -5,6 +5,7 @@ import Products from "../components/Products";
 import Newsletter from "../components/Newsletter";
 import Footer from "../components/Footer";
 import Sizes from "../components/Sizes";
+import { useState } from "react";
 
 const Container = styled.div``;
 
@@ -38,6 +39,8 @@ const Option = styled.option``;
 
 const ProductList = () => {
 
+  const [filterSize, setFilterSize] = useState('')
+
   return (
     <Container>
       <Navbar />
@@ -58,7 +61,7 @@ const ProductList = () => {
             <Option>Green</Option>
           </Select>
           
-          <Sizes></Sizes>
+          <Sizes setFilterSize={setFilterSize}></Sizes>
 
         </Filter>
         <Filter>
@@ -70,8 +73,11 @@ const ProductList = () => {
           </Select>
         </Filter>
       </FilterContainer>
-      <Products />
+
+      <Products filterBySize={filterSize} />
+
       <Newsletter />
+
       <Footer />
     </Container>
   );

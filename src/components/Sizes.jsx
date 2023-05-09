@@ -11,7 +11,7 @@ const Select = styled.select`
 `;
 const Option = styled.option``;
 
-const Sizes = () => {
+const Sizes = (props) => {
 
     const [sizes, setSizes] = useState([])
 
@@ -28,7 +28,7 @@ const Sizes = () => {
 
   return (
     <Container>
-        <Select defaultValue={'DEFAULT'}>
+        <Select defaultValue={'DEFAULT'} onChange={(e) => props.setFilterSize(e.target.value)}>
             <Option disabled value="DEFAULT">
               Size
             </Option>

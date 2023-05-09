@@ -161,6 +161,7 @@ const Button = styled.button`
   background-color: black;
   color: white;
   font-weight: 600;
+  cursor: pointer;
 `;
 
 const CartProduct = () => {
@@ -247,7 +248,7 @@ const CartProduct = () => {
                       </ProductId>
                       <ProductColor color="black" />
                       <ProductSize>
-                        <b>Size:</b> 37.5
+                        <b>Size:</b> {item.sizes}
                       </ProductSize>
                     </Details>
                   </ProductDetail>

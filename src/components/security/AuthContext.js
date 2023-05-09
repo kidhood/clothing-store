@@ -8,18 +8,18 @@ export default function AuthProvider({children}){
 
     const [cart, setCart] = useState([])
 
-    function addToCart(item){
+    function addToCart(item, size, amount){
         // setCart([...cart,item])
         const exist = cart.find( (x) => x.id === item.id)           
         if(exist != null){
-            setCart(
+             setCart(
                 cart.map( (x) => 
-                    x.id === item.id ? {...exist, amount: exist.amount + 1} : x
+                    x.id === item.id ? {...exist, amount: exist.amount + amount,sizes: size } : x
                 )
             )
             console.log(cart)
         }else{
-            setCart([...cart, {...item,amount: 1}])
+            setCart([...cart, {...item,amount: amount,sizes: size}])
             console.log(cart)
         }
     }
