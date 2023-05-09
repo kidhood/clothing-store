@@ -1,24 +1,24 @@
 -- CUSTOMER
 
 insert into CUSTOMERS (CUSTOMERSID ,FIRST_NAME,LAST_NAME , EMAIL ,PHONE_NUMBER ,LINE ,CITY ,COUNTRY ,DATE_REGISTERED ,IS_DELETE )
-values (1,'cu1', 'hehe','cu1@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);
+values (1001,'cu1', 'hehe','cu1@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);
 
 insert into CUSTOMERS (CUSTOMERSID ,FIRST_NAME,LAST_NAME , EMAIL ,PHONE_NUMBER ,LINE ,CITY ,COUNTRY ,DATE_REGISTERED ,IS_DELETE )
-values (2,'cu2', 'hehe','cu2@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);
+values (1002,'cu2', 'hehe','cu2@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);
 
 insert into CUSTOMERS (CUSTOMERSID ,FIRST_NAME,LAST_NAME , EMAIL ,PHONE_NUMBER ,LINE ,CITY ,COUNTRY ,DATE_REGISTERED ,IS_DELETE )
-values (3,'cu3', 'hehe','cu3@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);
+values (1003,'cu3', 'hehe','cu3@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);
 
 -- ACCOUNT
 
 insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,IS_DELETE ) 
-values (1, 'sa', '1','US',1,false);
+values (1001, 'sa', '1','US',1001,false);
 
 insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,IS_DELETE ) 
-values (2, 'sa', '1','US',2,false);
+values (1002, 'sa', '1','US',1002,false);
 
 insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,IS_DELETE ) 
-values (3, 'ad', '1','AD',3,false);
+values (1003, 'ad', '1','AD',1003,false);
 
 -- CATEGORIES
 
