@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.vthong.clothingstore.model.JwtRequestModel;
 import com.vthong.clothingstore.model.JwtResponseModel;
+import com.vthong.clothingstore.service.AuthenticationService;
 import com.vthong.clothingstore.service.JwtTokenService;
+import com.vthong.clothingstore.utility.JwtUtility;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -17,13 +19,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class JwtAuthencationController {
 	
-	private final JwtTokenService jwtTokenService;
+	private final AuthenticationService authenticationService;
 	
 	private AuthenticationManager authenticationManager;
 	
-	public JwtAuthencationController(JwtTokenService jwtTokenService,
+	
+	
+	
+	public JwtAuthencationController(AuthenticationService authenticationService,
 			AuthenticationManager authenticationManager) {
-		this.jwtTokenService = jwtTokenService;
+		this.authenticationService = authenticationService;
 		this.authenticationManager = authenticationManager;
 		
 	}
@@ -32,20 +37,18 @@ public class JwtAuthencationController {
 	    public ResponseEntity<JwtResponseModel> generateToken(
 	            @RequestBody JwtRequestModel jwtTokenRequest) {
 	        
-	        var authenticationToken = 
-	                new UsernamePasswordAuthenticationToken(
-	                        jwtTokenRequest.username(), 
-	                        jwtTokenRequest.password());
+//	        var authenticationToken = 
+//	                new UsernamePasswordAuthenticationToken(
+//	                        jwtTokenRequest.username(), 
+//	                        jwtTokenRequest.password());
+//	        
+//	        var authentication = 
+//	                authenticationManager.authenticate(authenticationToken);
+//	        
+//	        var token = jwtTokenService.generateToken(authentication);
 	        
-	        var authentication = 
-	                authenticationManager.authenticate(authenticationToken);
-	        
-	        System.out.println("We are here");
-	        log.info("token encode {}", authentication.getCredentials() );
-	        var token = jwtTokenService.generateToken(authentication);
-	        
-	        log.info("token {}", token );
-	        
-	        return ResponseEntity.ok(new JwtResponseModel(token));
+//	        return ResponseEntity.ok(new JwtResponseModel(token));
+		 
+		 	return ResponseEntity.ok(authenticationService.authenticate(jwtTokenRequest));
 	    }
 }

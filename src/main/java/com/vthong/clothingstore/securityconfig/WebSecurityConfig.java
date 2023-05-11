@@ -26,6 +26,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -55,6 +56,9 @@ public class WebSecurityConfig{
 	@Autowired
 	private CustomAuthenticationProvider customAuthenticationProvider;
 	
+	@Autowired
+	private JwtAuthenticationFilter jwtAuthFilter;
+	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
@@ -76,6 +80,7 @@ public class WebSecurityConfig{
 	                .sessionManagement(session -> session.
 	                	sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 	                .authenticationProvider(customAuthenticationProvider)
+	                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 	                .httpBasic(
 	                        Customizer.withDefaults())
 	                .headers(header -> {
