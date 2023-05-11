@@ -16,7 +16,7 @@ public class UserTest {
 	@Test
 	void testCreateUserByLombok() {
 		User u = User.builder().userName("Hello").build();
-		assertEquals("Hello", u.getUserName());
+		assertEquals("Hello", u.getUsername());
 	}
 	
 }
