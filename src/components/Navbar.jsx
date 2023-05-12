@@ -33,7 +33,6 @@ const SearchContainer = styled.div`
   margin-left: 25px;
   padding: 5px;
 `;
-
 const Input = styled.input`
     border:none;
 `
@@ -71,8 +70,22 @@ const Navbar = () => {
 
     const carts = authContext.cart
 
+    const isAuthenticated = authContext.isAuthenticated
+
     function handleShowCart(){
         navigate('/cart')
+    }
+
+    function handleSignIn(){
+        navigate('/login')
+    }
+
+    function handleRegister() {
+        navigate('/register')
+    }
+
+    function handleLogout () {
+        authContext.logout()
     }
 
   return (
@@ -87,9 +100,17 @@ const Navbar = () => {
             </Left>
             <Center><Logo>LAMA.</Logo></Center>
             <Right>
-
-                <MenuItem>REGISTER</MenuItem>
-                <MenuItem>SIGN IN</MenuItem>
+                {isAuthenticated && <MenuItem>
+                                        <Button onClick={handleLogout}>LOGOUT</Button>
+                                    </MenuItem>
+                }
+                {!isAuthenticated && 
+                    <Right>
+                        <MenuItem><Button onClick={handleRegister}>REGISTER</Button></MenuItem>
+                        <MenuItem><Button onClick={handleSignIn}>SIGN IN</Button></MenuItem>
+                    </Right>
+                }
+                
                 <MenuItem>
                     <Badge badgeContent={carts.length} color="primary">
                     <Button onClick={handleShowCart}><ShoppingCartOutlined color="action" /></Button>

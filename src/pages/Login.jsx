@@ -1,4 +1,7 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useAuth } from "../components/security/AuthContext";
 
 const Container = styled.div`
   width: 100vw;
@@ -26,7 +29,11 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 
-const Form = styled.form`
+const ErrorMessage = styled.div`
+  
+`
+
+const Form = styled.div`
   display: flex;
   flex-direction: column;
 `;
@@ -56,14 +63,36 @@ const Link = styled.a`
 `;
 
 const Login = () => {
+
+
+  const navigate = useNavigate()
+
+  const authContext = useAuth()
+
+  const [username, setUsername] = useState('')
+
+  const [passowrd, setPassword] = useState('')
+
+  const [showErrorMessage, setShowErrorMessage] = useState(false)
+
+  async function handleSubmit(){
+    if(await authContext.login(username, passowrd) ){
+        navigate('/home')
+    }else{
+      setShowErrorMessage(true)
+    }
+  }
+
   return (
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
+        {showErrorMessage && <ErrorMessage>Authentication Failed. 
+                                                            Please check your credentials.</ErrorMessage>}
         <Form>
-          <Input placeholder="username" />
-          <Input placeholder="password" />
-          <Button>LOGIN</Button>
+          <Input placeholder="username" onChange={(e) => setUsername(e.target.value)}/>
+          <Input placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+          <Button onClick={handleSubmit}>LOGIN</Button>
           <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
           <Link>CREATE A NEW ACCOUNT</Link>
         </Form>

@@ -34,7 +34,7 @@ const Products = (props) => {
   return (
     <Container>
         {products.filter( (item) => {
-            return filterBySize === "" ? item : item.sizes.some( size  => size.sizeName === filterBySize)
+            return (filterBySize === "" || filterBySize == null) ? item : item.sizes.some( size  => size.sizeName === filterBySize)
         }       
         ).map((item) => (
             <Product item = {item} key={item.productID}/>

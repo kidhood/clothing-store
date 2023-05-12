@@ -137,6 +137,7 @@ const Summary = styled.div`
   border-radius: 10px;
   padding: 20px;
   height: 50vh;
+  margin-bottom: 20px;
 `;
 
 const SummaryTitle = styled.h1`
@@ -162,6 +163,7 @@ const Button = styled.button`
   color: white;
   font-weight: 600;
   cursor: pointer;
+  margin-bottom: 10px;
 `;
 
 const CartProduct = () => {
