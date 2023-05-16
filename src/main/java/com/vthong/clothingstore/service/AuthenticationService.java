@@ -31,6 +31,7 @@ public class AuthenticationService {
 		        )
 		    );
 		    UserDetails user = userRepository.findByUserName(request.username());
+		    
 		    var jwtToken = jwtService.generateToken(user);
 //		    var refreshToken = jwtService.generateRefreshToken(user);
 //		    revokeAllUserTokens(user);

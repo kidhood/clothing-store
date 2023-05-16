@@ -3,6 +3,7 @@ package com.vthong.clothingstore.entity;
 import java.sql.Date;
 import java.util.List;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -34,7 +35,7 @@ public class Customers {
 	private String firstName;
 	
 	private String lastName;
-	
+	@Column(unique=true)
 	private String email;
 	
 	private String phoneNumber;

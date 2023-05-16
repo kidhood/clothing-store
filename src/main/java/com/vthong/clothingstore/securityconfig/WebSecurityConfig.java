@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.jdbc.datasource.init.UncategorizedScriptException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -33,6 +34,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import com.vthong.clothingstore.enums.UserRole;
 import com.vthong.clothingstore.service.CustomAuthenticationProvider;
 import com.vthong.clothingstore.service.CustomUserDetailsService;
 
@@ -46,8 +48,10 @@ public class WebSecurityConfig{
 			"/h2-console",
 			"/verifyregistration*",
 			"/resendverifyToken*",
-			"/authenticate"
-			
+			"/authenticate",
+			"/products",
+			"/products/*",
+			"/sizes"		
 	};
 //	
 //	@Autowired
@@ -64,13 +68,15 @@ public class WebSecurityConfig{
 		return new BCryptPasswordEncoder();
 	}
   
-	 @Bean
+	
+	@Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		  return http
 	                .csrf( csrf -> csrf.disable())
 	                .authorizeHttpRequests(auth -> auth
                 		.requestMatchers(HttpMethod.POST,"/**").permitAll()
 	                	.requestMatchers(WHITE_LIST_URLS).permitAll()
+	                	.requestMatchers(HttpMethod.POST,"/users/*").hasAnyAuthority(UserRole.US.name())
 	                	.requestMatchers(PathRequest.toH2Console()).permitAll() // h2-console is a servlet and NOT recommended for a production
 	                    .requestMatchers(HttpMethod.OPTIONS,"/**")
 	                    .permitAll()

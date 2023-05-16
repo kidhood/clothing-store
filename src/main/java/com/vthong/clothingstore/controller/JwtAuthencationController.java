@@ -3,6 +3,7 @@ package com.vthong.clothingstore.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,4 +52,9 @@ public class JwtAuthencationController {
 		 
 		 	return ResponseEntity.ok(authenticationService.authenticate(jwtTokenRequest));
 	    }
+	 
+	 @GetMapping("/basicauth")
+	 public String basicAuthCheck() {
+		 return "success";
+	 }
 }

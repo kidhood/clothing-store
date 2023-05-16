@@ -18,7 +18,7 @@ insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,ENABLE )
 values (1002, 'sa', '1','US',1002,false);
 
 insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,ENABLE ) 
-values (1003, 'ad', '1','AD',1003,false);
+values (1003, 'ad', '$2a$10$tEeYfFCFc8E7c68BGc9qE.6UrsIO1G.5zXfSklFxCSV2Eonetupm2','AD',1003,true);
 
 -- CATEGORIES
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.vthong.clothingstore.entity.Customers;
 import com.vthong.clothingstore.entity.User;
 import com.vthong.clothingstore.entity.VerificationToken;
 import com.vthong.clothingstore.event.RegistrationCompleteEvent;
@@ -39,14 +40,26 @@ public class UserController {
 		return userRepository.findAll();
 	}
 	
+	
+	public Customers retrieveCustomerByUserName(String username) {
+		User user = userSevice.findUserByUserName(username);
+		return user.getCustomers();
+	}
+	
 	@PostMapping("/register")
 	public String registerUser(@RequestBody  UserModel userModel,
 			final HttpServletRequest request) {
+		if(userSevice.findUserByUserName(userModel.getUserName()) != null) {
+			return "This username already have please change";
+		}
 		User user = userSevice.registerUser(userModel);
+		if(user == null) {
+			return "Repassword not matching";
+		}
 		publicsher.publishEvent(new RegistrationCompleteEvent(
 				user,
 				userSevice.applicationUrl(request)));
-		return "Success";
+		return "Success please check email to verify your account";
 	}
 	
 	@GetMapping("/verifyregistration")
@@ -74,7 +87,7 @@ public class UserController {
 		 return "Verification Link sent";
 	}
 	
-	@PostMapping("/resetpassword")
+	@PostMapping("/users/resetpassword")
 	public String resetPassword(@RequestBody PasswordModel passwordModel,
 			HttpServletRequest request) {
 		
@@ -89,7 +102,7 @@ public class UserController {
 		return url;
 	}
 	
-	@PostMapping("/savepassword")
+	@PostMapping("/users/savepassword")
 	public String savePassword(@RequestParam("token")String token, 
 					@RequestBody PasswordModel passwordModel) {
 		
@@ -107,11 +120,11 @@ public class UserController {
 		 }
 	}
 	
-	@PostMapping("/changepassword")
+	@PostMapping("/users/changepassword")
 	public String changePassword(@RequestBody PasswordModel passwordModel) {
 		User user = userSevice.findUserByUserName(passwordModel.getUserName());
 		if(!userSevice.checkIfValidOldPasswrod(passwordModel.getOldPassword(),user)) {
-			return "Invvalid Old password";
+			return "Invalid Old password";
 		}
 		
 		//save new password

@@ -41,22 +41,24 @@ public class UserSevice {
 	private PasswordEncoder passwordEncoder;
 	
 	public User registerUser(UserModel userModel) {
-		User user = new User();
-		Customers cus = new Customers();
-		user.setUserName(userModel.getUserName());
-		user.setPassword(passwordEncoder.encode(userModel.getPassword()) );
-		user.setRole(UserRole.US);
-		cus.setFirstName(userModel.getFirstName());
-		cus.setLastName(userModel.getLastName());
-		cus.setEmail(userModel.getEmail());
-		user.setCustomers(cus);
-		customerService.saveCustomer(cus);
+		if(userModel.getPassword().equals(userModel.getMatchingPassword())) {
+			User user = new User();
+			Customers cus = new Customers();
+			user.setUserName(userModel.getUserName());
+			user.setPassword(passwordEncoder.encode(userModel.getPassword()) );
+			user.setRole(UserRole.US);
+			user.setEnable(false);
+			cus.setFirstName(userModel.getFirstName());
+			cus.setLastName(userModel.getLastName());
+			cus.setEmail(userModel.getEmail());
+			user.setCustomers(cus);
+			customerService.saveCustomer(cus);
+			
+			userRepository.save(user);
+			return user;
+		}
 		
-		userRepository.save(user);
-
-		
-		
-		return user;
+		return null;
 	}
 
 	public void saveVerificationTokenForUser(String token, User user) {
