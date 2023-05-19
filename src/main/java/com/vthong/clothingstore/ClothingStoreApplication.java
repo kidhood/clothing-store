@@ -23,24 +23,5 @@ public class ClothingStoreApplication {
 		SpringApplication.run(ClothingStoreApplication.class, args);
 	}
 	
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
-			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**")
-					.allowedMethods("*")
-					.allowedOrigins("http://localhost:3000");
-			}
-		};
-	}
-	
-//	@EventListener(ApplicationReadyEvent.class)
-//	public void triggerMail() throws MessagingException {
-//
-//		service.sendSimpleEmail("nguoivodanh053@gmail.com",
-//								"Test mail",
-//								"TEst");
-//
-//	}
 
 }

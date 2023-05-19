@@ -4,6 +4,7 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -35,6 +39,11 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import com.vthong.clothingstore.enums.UserRole;
+import com.vthong.clothingstore.securityconfig.oauth2.CustomOAuth2UserService;
+import com.vthong.clothingstore.securityconfig.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.vthong.clothingstore.securityconfig.oauth2.OAuth2AuthenticationFailureHandler;
+import com.vthong.clothingstore.securityconfig.oauth2.OAuth2AuthenticationSuccessHandler;
+import com.vthong.clothingstore.securityconfig.oauth2.user.RestAuthenticationEntryPoint;
 import com.vthong.clothingstore.service.CustomAuthenticationProvider;
 import com.vthong.clothingstore.service.CustomUserDetailsService;
 
@@ -45,13 +54,25 @@ public class WebSecurityConfig{
 	private static final String[] WHITE_LIST_URLS = {
 			"/hello",
 			"/register",
-			"/h2-console",
+//			"/h2-console",
 			"/verifyregistration*",
 			"/resendverifyToken*",
 			"/authenticate",
 			"/products",
 			"/products/*",
-			"/sizes"		
+			"/sizes",
+			"/oauth2/**",
+			"/auth/**",
+			"/",
+            "/error",
+            "/favicon.ico",
+//            "/**/*.png",
+//            "/**/*.gif",
+//            "/**/*.svg",
+//            "/**/*.jpg",
+//            "/**/*.html",
+//            "/**/*.css",
+//            "/**/*.js"
 	};
 //	
 //	@Autowired
@@ -61,18 +82,30 @@ public class WebSecurityConfig{
 	private CustomAuthenticationProvider customAuthenticationProvider;
 	
 	@Autowired
+	private CustomOAuth2UserService customOAuth2UserService;
+	
+	@Autowired
+	private  OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+	
+	@Autowired
+    private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+	
+	@Autowired
 	private JwtAuthenticationFilter jwtAuthFilter;
 	
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-  
 	
 	@Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		  return http
 	                .csrf( csrf -> csrf.disable())
+//	                .cors(c -> c.disable())
+	                .exceptionHandling( exception -> exception
+	                								.authenticationEntryPoint(new RestAuthenticationEntryPoint()))
 	                .authorizeHttpRequests(auth -> auth
                 		.requestMatchers(HttpMethod.POST,"/**").permitAll()
 	                	.requestMatchers(WHITE_LIST_URLS).permitAll()
@@ -83,19 +116,38 @@ public class WebSecurityConfig{
 	                    .anyRequest()
 	                    .authenticated()
 	                    )
-	                .sessionManagement(session -> session.
-	                	sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	                .authenticationProvider(customAuthenticationProvider)
-	                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 	                .httpBasic(
 	                        Customizer.withDefaults())
 	                .headers(header -> {
 	                    header.frameOptions( frame -> frame.sameOrigin() );
 	                })
-	                .formLogin(Customizer.withDefaults())
+	                .formLogin(login -> login 
+	                					.disable()
+	                					)
+	                .httpBasic( basic -> 
+	                					basic.disable())	
+	                .oauth2Login( oauth -> oauth
+	                					.authorizationEndpoint(a -> a.baseUri("/oauth2/authorize")
+	                												.authorizationRequestRepository(cookieAuthorizationRequestRepository()))
+	                					.redirectionEndpoint(e -> e.baseUri("/oauth2/callback/*"))
+	                					.userInfoEndpoint( user -> user.userService(customOAuth2UserService))
+	                					.successHandler(oAuth2AuthenticationSuccessHandler)
+	                					.failureHandler(oAuth2AuthenticationFailureHandler)
+	                					
+	                		)	
+	                .sessionManagement(session -> session.
+	                		sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+	                .authenticationProvider(customAuthenticationProvider)
+	                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
 	                .build();
     }
 	 
+	
+	@Bean
+    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
+        return new HttpCookieOAuth2AuthorizationRequestRepository();
+    }
+	
 	 	@Bean
 	    public AuthenticationManager authenticationManager(
 	    		CustomUserDetailsService customUserDetailsService) {

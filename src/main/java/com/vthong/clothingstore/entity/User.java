@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.vthong.clothingstore.enums.AuthProvider;
 import com.vthong.clothingstore.enums.UserRole;
 
 import jakarta.persistence.Column;
@@ -33,7 +34,7 @@ import lombok.ToString;
 @NoArgsConstructor
 
 @Entity(name = "Account")
-public class User implements UserDetails{
+public class User implements  UserDetails{
 	@Id
 	@GeneratedValue
 	private Long id;
@@ -44,6 +45,11 @@ public class User implements UserDetails{
 	
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
+	
+	@Enumerated(EnumType.STRING)
+	private AuthProvider provider;
+	
+	private String imageUrl;
 	
 	private Boolean enable;
 	
