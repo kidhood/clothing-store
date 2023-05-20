@@ -1,7 +1,7 @@
 -- CUSTOMER
 
 insert into CUSTOMERS (CUSTOMERSID ,FIRST_NAME,LAST_NAME , EMAIL ,PHONE_NUMBER ,LINE ,CITY ,COUNTRY ,DATE_REGISTERED ,IS_DELETE )
-values (1001,'cu1', 'hehe','cu1@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);
+values (1001,'cu1', 'hehe','cu1@gmail.com','',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);
 
 insert into CUSTOMERS (CUSTOMERSID ,FIRST_NAME,LAST_NAME , EMAIL ,PHONE_NUMBER ,LINE ,CITY ,COUNTRY ,DATE_REGISTERED ,IS_DELETE )
 values (1002,'cu2', 'hehe','cu2@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DATE(),FALSE);

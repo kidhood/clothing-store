@@ -16,9 +16,11 @@ import com.vthong.clothingstore.entity.Customers;
 import com.vthong.clothingstore.entity.User;
 import com.vthong.clothingstore.entity.VerificationToken;
 import com.vthong.clothingstore.event.RegistrationCompleteEvent;
+import com.vthong.clothingstore.model.JwtResponseModel;
 import com.vthong.clothingstore.model.PasswordModel;
 import com.vthong.clothingstore.model.UserModel;
 import com.vthong.clothingstore.repository.UserRepository;
+import com.vthong.clothingstore.service.JwtTokenService;
 import com.vthong.clothingstore.service.UserSevice;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,11 +37,18 @@ public class UserController {
 	@Autowired
 	private ApplicationEventPublisher publicsher;
 	
+	@Autowired
+	private JwtTokenService jwtTokenService;
+	
 	@GetMapping("users")
 	public List<User> retriveUsers(){
 		return userRepository.findAll();
 	}
 	
+	@PostMapping("/users/username")
+	public String retriveUserName(@RequestBody JwtResponseModel responseModel){
+		return jwtTokenService.extractUsername(responseModel.token());
+	}
 	
 	public Customers retrieveCustomerByUserName(String username) {
 		User user = userSevice.findUserByUserName(username);

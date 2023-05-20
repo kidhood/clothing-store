@@ -16,8 +16,6 @@ import jakarta.mail.MessagingException;
 @SpringBootApplication
 public class ClothingStoreApplication {
 	
-//	@Autowired
-//	private EmailSenderService service;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(ClothingStoreApplication.class, args);

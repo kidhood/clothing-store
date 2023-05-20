@@ -20,9 +20,11 @@ import com.vthong.clothingstore.enums.UserRole;
 import com.vthong.clothingstore.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Transactional
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService{
 	
 	@Autowired
@@ -35,15 +37,7 @@ public class CustomUserDetailsService implements UserDetailsService{
 		if(user == null) {
 			throw new UsernameNotFoundException("No User Found");
 		}
-//		return new org.springframework.security.core.userdetails.User(
-//				user.getUserName(),
-//				user.getPassword(),
-//				user.getEnable(),
-//				true,
-//				true,
-//				true,
-//				getAuthorities(List.of(user.getRole()))
-//				);
+
 			return user;
 	}
 

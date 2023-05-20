@@ -13,6 +13,7 @@ import com.vthong.clothingstore.securityconfig.oauth2.UserPrincipal;
 import com.vthong.clothingstore.entity.Customers;
 import com.vthong.clothingstore.entity.User;
 import com.vthong.clothingstore.enums.AuthProvider;
+import com.vthong.clothingstore.enums.UserRole;
 import com.vthong.clothingstore.exception.OAuth2AuthenticationProcessingException;
 import com.vthong.clothingstore.repository.UserRepository;
 import com.vthong.clothingstore.securityconfig.oauth2.user.OAuth2UserInfo;
@@ -69,18 +70,25 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService{
 	        User user = new User();
 
 	        user.setProvider(AuthProvider.valueOf(oAuth2UserRequest.getClientRegistration().getRegistrationId()));
-//	        Customers cus = user.getCustomers();
+	        Customers cus = new Customers();
 //	        user.setProviderId(oAuth2UserInfo.getId());
-//	        cus.setFirstName(oAuth2UserInfo.getName());
+	        cus.setFirstName(oAuth2UserInfo.getName());
+	        cus.setEmail(oAuth2UserInfo.getEmail());
+	        cus.setIsDelete(false);
+	        
 	        user.setUserName(oAuth2UserInfo.getEmail());
 	        user.setImageUrl(oAuth2UserInfo.getImageUrl());
-//	        customerService.saveCustomer(cus);
+	        user.setCustomers(cus);
+	        user.setRole(UserRole.US);
+	        user.setEnable(true);
+	        
+	        customerService.saveCustomer(cus);
 	        return userRepository.save(user);
 	    }
 
 	    private User updateExistingUser(User existingUser, OAuth2UserInfo oAuth2UserInfo) {
-//	        existingUser.setName(oAuth2UserInfo.getName());
-//	        existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
+	        existingUser.getCustomers().setFirstName(oAuth2UserInfo.getName());
+	        existingUser.setImageUrl(oAuth2UserInfo.getImageUrl());
 	        return userRepository.save(existingUser);
 	    }
 

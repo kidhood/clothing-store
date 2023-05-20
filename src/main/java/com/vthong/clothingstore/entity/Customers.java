@@ -1,15 +1,18 @@
 package com.vthong.clothingstore.entity;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
+
+import org.hibernate.annotations.CreationTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
@@ -17,16 +20,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
 @Builder
 @NoArgsConstructor
-
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Customers {
 	@Id
 	@GeneratedValue
@@ -40,17 +41,28 @@ public class Customers {
 	
 	private String phoneNumber;
 	
+	@JsonIgnore
+	@CreationTimestamp
 	private Date dateRegistered;
 	
 	@Embedded
 	private Address address;
 	
+	@JsonIgnore
 	private Boolean isDelete;
 	
 	@OneToMany(mappedBy = "customer")
+	@JsonIgnore
 	private List<Orders> orders;
 	
 	@OneToOne(mappedBy = "customers")
+	@JsonIgnore
 	private User user;
+
+	@Override
+	public String toString() {
+		return "Customers [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", phoneNumber="
+				+ phoneNumber + ", dateRegistered=" + dateRegistered + ", address=" + address.toString() ;
+	}
 	
 }
