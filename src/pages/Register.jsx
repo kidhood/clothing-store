@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { useAuth } from "../components/security/AuthContext";
 import { registerUser } from "../components/api/UserApiService";
+import { Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
@@ -27,6 +28,14 @@ const Wrapper = styled.div`
 const Title = styled.h1`
   font-size: 24px;
   font-weight: 300;
+`;
+
+const Message = styled.h3`
+  font-size: 18px;
+  background-color: yellow;
+  color: black;
+  padding: 10px;
+  text-align: center;
 `;
 
 const Form = styled.div`
@@ -58,12 +67,18 @@ const Button = styled.button`
 const Register = () => {
 
   const [firstName, setFirstName] = useState('')
+
   const [lastName, setLastName] = useState('')
+
   const [userName, setUserName] = useState('')
+
   const [email, setEmail] = useState('')
+
   const [password, setPassword] = useState('')
+
   const [rePassword, setRePassword] = useState('')
   
+  const [message, setMessage] = useState('')
 
   function handRegister(){
     const userAccount = {
@@ -74,15 +89,23 @@ const Register = () => {
       password: password,
       matchingPassword: rePassword
     }
-    console.log(userAccount)
-    const response = registerUser(userAccount)
-    console.log(response.data)
+
+
+    registerUser(userAccount)
+      .then(response => setMessage(response.data))
+      .catch(error => console.log(error))
+    
   }
 
   return (
     <Container>
       <Wrapper>
         <Title>CREATE AN ACCOUNT</Title>
+        {message && <Message>
+                  {message}
+                  <Link to="/login"> Login</Link>
+                  </Message>
+          }
         <Form>
           <Input placeholder="first name" onChange={(e) => setFirstName(e.target.value)} />
           <Input placeholder="last name" onChange={(e) => setLastName(e.target.value)}/>

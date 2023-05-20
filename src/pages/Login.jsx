@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../components/security/AuthContext";
+import { Google} from "@mui/icons-material";
+import { GOOGLE_AUTH_URL } from "../constants/Url.js";
+// import { GOOGLE_AUTH_URL } from '../constants'
 
 const Container = styled.div`
   width: 100vw;
@@ -46,7 +49,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  width: 40%;
+  width: 100%;
   border: none;
   padding: 15px 20px;
   background-color: teal;
@@ -55,12 +58,32 @@ const Button = styled.button`
   margin-bottom: 10px;
 `;
 
-const Link = styled.a`
+const LinkCus = styled.a`
   margin: 5px 0px;
   font-size: 12px;
   text-decoration: underline;
   cursor: pointer;
+  color: black;
 `;
+
+const SocialButton = styled.div`
+  min-width: 40%;
+  border: 1px solid lightgrey;
+  border-radius: 10px;
+  padding: 15px 20px;
+  text-align: center;
+  background-color: lightgrey;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const SocialLogin = styled.a`
+  text-decoration: none;
+  color: black;
+  margin-left: 10px;
+`
 
 const Login = () => {
 
@@ -75,6 +98,7 @@ const Login = () => {
 
   const [showErrorMessage, setShowErrorMessage] = useState(false)
 
+
   async function handleSubmit(){
     if(await authContext.login(username, passowrd) ){
         navigate('/home')
@@ -82,6 +106,7 @@ const Login = () => {
       setShowErrorMessage(true)
     }
   }
+
 
   return (
     <Container>
@@ -93,8 +118,12 @@ const Login = () => {
           <Input placeholder="username" onChange={(e) => setUsername(e.target.value)}/>
           <Input placeholder="password" onChange={(e) => setPassword(e.target.value)} />
           <Button onClick={handleSubmit}>LOGIN</Button>
-          <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-          <Link>CREATE A NEW ACCOUNT</Link>
+          <SocialButton>
+            <Google />
+            <SocialLogin href={GOOGLE_AUTH_URL}>Login With Google</SocialLogin>
+          </SocialButton>
+          <LinkCus><Link>DO YOU NOT REMEMBER THE PASSWORD?</Link></LinkCus>
+          <LinkCus><Link to="/register">CREATE A NEW ACCOUNT</Link></LinkCus>
         </Form>
       </Wrapper>
     </Container>
