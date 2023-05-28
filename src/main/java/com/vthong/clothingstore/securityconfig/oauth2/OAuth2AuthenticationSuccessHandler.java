@@ -1,4 +1,4 @@
-package com.vthong.clothingstore.securityconfig.oauth2;
+	package com.vthong.clothingstore.securityconfig.oauth2;
 
 import java.io.IOException;
 import java.net.URI;

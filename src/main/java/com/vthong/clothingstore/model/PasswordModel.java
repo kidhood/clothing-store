@@ -10,6 +10,7 @@ public class PasswordModel {
 	private String oldPassword;
 	
 	private String newPassword;
-	
+
+	private String confirmPassword;
 	
 }

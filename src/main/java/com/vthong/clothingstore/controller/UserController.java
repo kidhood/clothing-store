@@ -6,11 +6,14 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.function.EntityResponse;
 
 import com.vthong.clothingstore.entity.Customers;
 import com.vthong.clothingstore.entity.User;
@@ -56,19 +59,19 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")
-	public String registerUser(@RequestBody  UserModel userModel,
+	public ResponseEntity<String> registerUser(@RequestBody  UserModel userModel,
 			final HttpServletRequest request) {
 		if(userSevice.findUserByUserName(userModel.getUserName()) != null) {
-			return "This username already have please change";
+			return new ResponseEntity<String>("This username already have please change",HttpStatus.BAD_REQUEST);
 		}
 		User user = userSevice.registerUser(userModel);
 		if(user == null) {
-			return "Repassword not matching";
+			return new ResponseEntity<String>("Repassword not matching",HttpStatus.BAD_REQUEST);
 		}
 		publicsher.publishEvent(new RegistrationCompleteEvent(
 				user,
 				userSevice.applicationUrl(request)));
-		return "Success please check email to verify your account";
+		return new ResponseEntity<String>("Success please check email to verify your account",HttpStatus.ACCEPTED);
 	}
 	
 	@GetMapping("/verifyregistration")
@@ -130,15 +133,16 @@ public class UserController {
 	}
 	
 	@PostMapping("/users/changepassword")
-	public String changePassword(@RequestBody PasswordModel passwordModel) {
+	public ResponseEntity<String> changePassword(@RequestBody PasswordModel passwordModel) {
 		User user = userSevice.findUserByUserName(passwordModel.getUserName());
 		if(!userSevice.checkIfValidOldPasswrod(passwordModel.getOldPassword(),user)) {
-			return "Invalid Old password";
+			return new ResponseEntity<>("Invalid Old password!", HttpStatus.BAD_REQUEST);
 		}
-		
+		if(!passwordModel.getConfirmPassword().equals(passwordModel.getNewPassword()))
+			return new ResponseEntity<>("Confirm password not match!", HttpStatus.BAD_REQUEST);
 		//save new password
 		userSevice.changePassword(user, passwordModel.getNewPassword());
-		return "Password Change Succesfully";
+		return ResponseEntity.ok("Password Change Succesfully!");
 	}
 
 }

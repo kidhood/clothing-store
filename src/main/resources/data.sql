@@ -12,7 +12,7 @@ values (1003,'cu3', 'hehe','cu3@gmail.com','  ',' ', ' ', 'Viet Nam', CURRENT_DA
 -- ACCOUNT
 
 insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,ENABLE ) 
-values (1001, 'vanthong', '$2a$10$tEeYfFCFc8E7c68BGc9qE.6UrsIO1G.5zXfSklFxCSV2Eonetupm2','US',1001,true);
+values (1001, 'vanthong', '$2a$10$Ba9cIDPerz1iDzjm6tknb.Xqf.QMq2zhf03tngLE96wlwY2SQEfXq','US',1001,true);
 
 insert into ACCOUNT (ID ,USER_NAME ,PASSWORD ,ROLE ,CUSTOMER_ID ,ENABLE ) 
 values (1002, 'sa', '1','US',1002,false);
