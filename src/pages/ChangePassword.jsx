@@ -3,7 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useAuth } from "../components/security/AuthContext";
 import { changePasswordUser } from "../components/api/UserApiService";
-import { Try } from "@mui/icons-material";
+import { ToastContainer, toast } from "react-toastify";
+import * as Yup from 'yup';
+import { Form, Formik } from "formik";
+import { Button, Grid, TextField } from "@mui/material";
 
 const Container = styled.div`
   width: 100vw;
@@ -32,16 +35,11 @@ const Title = styled.h1`
 `;
 
 const ErrorMessage = styled.div`
-  background-color: yellow;
-  font-size: 18px;
+  color: red;
+  font-size: 14px;
   text-align: center;
   padding: 10px;
 `
-
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 const Input = styled.input`
   flex: 1;
@@ -50,15 +48,15 @@ const Input = styled.input`
   padding: 10px;
 `;
 
-const Button = styled.button`
-  width: 100%;
-  border: none;
-  padding: 15px 20px;
-  background-color: teal;
-  color: white;
-  cursor: pointer;
-  margin-bottom: 10px;
-`;
+// const Button = styled.button`
+//   width: 100%;
+//   border: none;
+//   padding: 15px 20px;
+//   background-color: teal;
+//   color: white;
+//   cursor: pointer;
+//   margin-bottom: 10px;
+// `;
 
 const LinkCus = styled.a`
   margin: 5px 0px;
@@ -73,62 +71,139 @@ const ChangePassword = () => {
   const navigate = useNavigate()
 
   const authContext = useAuth()
+   
+  const validationSchema = Yup.object({
+    oldPassword: Yup.string()
+      .trim()
+      .strict(true)
+      .min(5, 'Your old password must be at least 5 characters!')
+      .max(25, 'Your old password must be under 25 characters!')
+      .required('You must fill in this section!'),
+    newPassword: Yup.string()
+      .min(5, 'Your new password must be at least 5 characters!')
+      .max(25, 'Your new password must be under 25 characters!')
+      .required('You must fill in this section!'),
+    confirmPassword:Yup.string()
+      .oneOf([Yup.ref('newPassword'), null], 'Passwords must match')
+      .required('You must fill in this section!'),
+  });
 
-  const [oldPassword, setOldPassword] = useState('')
+  const handleSubmit = (values,fun) => {
+    console.log(values)
+    changePasswordUser(values)
+    .then(response => {
+        let status = response.status
+        let message = response.data
+        console.log(response)
+        fun.resetForm()
+        notify(status, message )
+    })
+    .catch(error => notify(400, error.response.data))
+}
 
-  const [newPassowrd, setNewPassowrd] = useState('')
-
-  const [comNewPassword, setComNewPassword] = useState('')
-
-  const [message, setMessage] = useState(null)
-
-  useEffect( ()  => { 
-      if(message){
-        checkChangePassword()
-      }
-   }, [message])
-
-  async function handleSubmit() {
-    if (oldPassword == '' || newPassowrd == '' || comNewPassword == '') {
-      setMessage("PLease fill all input")
-      return
-    } else {
-      if (newPassowrd != comNewPassword) {
-        setMessage("Comfirm new password does not match!")
-        return
-      }
-    }
-    const passwordModel = {
-      userName: authContext.username,
-      oldPassword: oldPassword,
-      newPassword: newPassowrd
-    }
-    
-    changePasswordUser(passwordModel)
-      .then( (response) =>  setMessage(response.data))
-      .catch( (error) => console.log(error))
-
+function notify (status, message) {
+  if(status == 202 || status == 200){
+      toast.success('🦄' + message, {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
+  }else if(status == 400 || status == 500){
+      toast.error('🦄 Change password fail! ' + message, {
+          position: "top-center",
+          autoClose: 1000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          });
   }
-
-  function checkChangePassword() {
-    if (message.indexOf("Succesfully") > -1) {
-      setTimeout(() => { navigate('/login')}, 1000)
-      authContext.logout()
-    }
-  }
+}
 
   return (
     <Container>
       <Wrapper>
         <Title>CHANGE PASSWORD</Title>
-        {message && <ErrorMessage>{message}</ErrorMessage>}
-        <Form>
-          <Input type="password" placeholder="oldPassword" onChange={(e) => setOldPassword(e.target.value)} />
-          <Input type="password" placeholder="new password" onChange={(e) => setNewPassowrd(e.target.value)} />
-          <Input type="password" placeholder="comfirm new password" onChange={(e) => setComNewPassword(e.target.value)} />
-          <Button onClick={handleSubmit}>CHANGE PASSWORD</Button>
-          <LinkCus><Link to="/register">CREATE A NEW ACCOUNT</Link></LinkCus>
-        </Form>
+        <ToastContainer 
+            position="top-center"
+            autoClose={1000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            />
+        <Formik initialValues={{userName: authContext.username,oldPassword: "", newPassword:"", confirmPassword:""}}
+                enableReinitialize = {true}
+                validationSchema ={validationSchema}
+                validateOnChange = {true}
+                validateOnBlur = {true}
+                onSubmit={handleSubmit}
+                >     
+          {
+            ({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              /* and other goodies */
+            }) => (
+              <Form>
+                <Grid  >
+                      <div>
+                      <TextField 
+                          label="Old Password"
+                          value={values.oldPassword == null ? "" : values.oldPassword}
+                          name="oldPassword"
+                          type="password"
+                          onChange={ handleChange}
+                          onBlur={handleBlur}
+                          sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                        {touched.oldPassword &&  <ErrorMessage>{errors.oldPassword}</ErrorMessage>}
+                      </div>
+                      <div>
+                      <TextField label="New Password"
+                          value={values.newPassword == null ? "" : values.newPassword}
+                          name="newPassword"
+                          type="password"
+                          onChange={ handleChange}
+                          onBlur={handleBlur}
+                          sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                        { touched.newPassword && <ErrorMessage>{errors.newPassword}</ErrorMessage>}
+                      </div>
+                      <div>
+                      <TextField label="Confirm Password"
+                          value={values.confirmPassword == null ? "" : values.confirmPassword}
+                          name="confirmPassword"
+                          type="password"
+                          onChange={ handleChange}
+                          onBlur={handleBlur}
+                          sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                        {touched.confirmPassword && <ErrorMessage>{errors.confirmPassword}</ErrorMessage>}
+                      </div>
+                    <div>
+                      <Button type='submit' sx={{width:"100%", padding:"10px", marginTop:"10px", backgroundColor:"black", color:"white"}}>
+                          Submit
+                      </Button>
+                    </div>
+                </Grid>
+              </Form>
+            )
+          }
+        </Formik>
       </Wrapper>
     </Container>
   );

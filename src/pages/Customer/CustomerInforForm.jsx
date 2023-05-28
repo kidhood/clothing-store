@@ -3,22 +3,54 @@ import { Button, Grid, TextField, colors } from '@mui/material';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { updateCusProfile } from '../../components/api/CustomerApiService';
+import { Form, Formik, useFormik } from 'formik';
+import * as Yup from 'yup';
+import styled from 'styled-components';
+import Controls from "../../components/controls/Controls";
+import Input from '../../components/controls/Input';
 
-
-const genderItems = [
-    { id: 'male', title: 'Male' },
-    { id: 'female', title: 'Female' },
-    { id: 'other', title: 'Other' },
-]
-
+const ErrorMessage = styled.p`
+  margin-top: 0;
+  font-size: 14px;
+  color: red;
+`
 
 export default function CustomerInforForm  (props)  {
     const firstvalue = props.customer
 
-    const [values, setValues ] =  useState(firstvalue)
+    const [value, setValues ] =  useState(firstvalue)
 
-    const [success, SetSuccess] = useState(null)
-    
+    const validationSchema = Yup.object({
+        email: Yup.string()
+          .email('Invalid Email')
+          .required('You must fill in this section!'),
+        firstName: Yup.string()
+          .min(5, 'Your first name must be at least 5 characters!')
+          .max(25, 'Your first name must be under 25 characters!')
+          .required('You must fill in this section!'),
+        lastName: Yup.string()
+          .min(5, 'Your last name must be at least 5 characters!')
+          .max(25, 'Your last name must be under 25 characters!')
+          .required('You must fill in this section!'),
+        phoneNumber: Yup.string()
+          .matches(/^[0-9]{10}$/, 'Please enter a valid phone number')
+          .required('You must fill in this section!'),
+        address: Yup.object().shape({
+          line: Yup.string()
+            .min(5, 'Your line must be at least 5 characters!')
+            .max(25, 'Your line must be under 25 characters!')
+            .required('You must fill in this section!'),
+          city: Yup.string()
+            .min(5, 'Your city must be at least 5 characters!')
+            .max(25, 'Your city must be under 25 characters!')
+            .required('You must fill in this section!'),
+          country: Yup.string()
+            .min(5, 'Your country must be at least 5 characters!')
+            .max(25, 'Your country must be under 25 characters!')
+            .required('You must fill in this section!'),
+        }),
+      });
+  
     useEffect( () => {
                 setValues(props.customer)
             },
@@ -28,23 +60,24 @@ export default function CustomerInforForm  (props)  {
     const handleInputChange = e => {
         const {name,value} = e.target
         setValues({
-            ...values,
+            ...value,
             [name]:value
         })
     }
 
     const handleInputAddressChange = (e) => {
         const { name, value } = e.target;
-        setValues((values) => ({
-          ...values,
+        setValues((value) => ({
+          ...value,
           address: {
-            ...values.address,
+            ...value.address,
             [name]: value,
           },
         }));
       };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (values) => {
+        console.log(values)
         let success = 0;
         updateCusProfile(values)
             .then(response => {
@@ -66,7 +99,7 @@ export default function CustomerInforForm  (props)  {
                 progress: undefined,
                 theme: "light",
                 });
-        }else if(props == 400 || props == 500){
+        }else if(pros == 400 || pros == 500){
             toast.error('🦄 Update profile fail!', {
                 position: "top-center",
                 autoClose: 1000,
@@ -79,8 +112,7 @@ export default function CustomerInforForm  (props)  {
                 });
         }
     }
-
-
+    console.log(value)
   return (
     // <Form>
     <div  >
@@ -96,74 +128,114 @@ export default function CustomerInforForm  (props)  {
             pauseOnHover
             theme="light"
             />
-        <Grid container>
-            <Grid item xs={6}>
-                <TextField 
-                    name = "firstName"
-                    type='text'
-                    label = "First Name"
-                    value = {values.firstName == null ? "" : values.firstName}
-                    onChange={handleInputChange}
-                    sx={{margin: "20px", width:"80%" }}
-                />
-            
-                <TextField 
-                    name = "phoneNumber"
-                    type='number'
-                    label = "Phone Number"
-                    value = {values.phoneNumber == null ? "" :values.phoneNumber}
-                    onChange={handleInputChange}
-                    sx={{margin: "20px",width:"80%"}}
-                />
-
-                <TextField 
-                    name = "line"
-                    type='text'
-                    label = "Line"
-                    value = {values.address== null ? "" : values.address.line  }
-                    onChange={handleInputAddressChange}
-                    sx={{margin: "20px",width:"80%"}}
-                />
-
-                <TextField 
-                    name = "country"
-                    type='text'
-                    label = "Country"
-                    value = {values.address == null ? "" : values.address.country }
-                    onChange={handleInputAddressChange}
-                    sx={{margin: "20px",width:"80%"}}
-                />
-            </Grid>
-            <Grid item xs={6}>
-                <TextField 
-                    name = "lastName"
-                    type='text'
-                    label = "Last Name"
-                    value = {values.lastName == null ? "" :values.lastName}
-                    onChange={handleInputChange}
-                    sx={{margin: "20px",width:"80%"}}
-                />
-                <TextField 
-                    name = "email"
-                    type='email'
-                    label = "Email"
-                    value = {values.email == null ? "" :values.email}
-                    onChange={handleInputChange}
-                    sx={{margin: "20px",width:"80%"}}
-                />
-                <TextField 
-                    name = "city"
-                    type='text'
-                    label = "City"
-                    value = {values.address == null ? "" : values.address.city}
-                    onChange={handleInputAddressChange}
-                    sx={{margin: "20px",width:"80%"}}
-                />
-            </Grid>
-            <Button variant="contained" color="success" type='submit' sx={{margin: "auto", Padding: "20px", marginBottom: "20px", width:"40%"}} onClick={handleSubmit}>
-                Submit
-            </Button>
-        </Grid>
+        <Formik initialValues={value} 
+                enableReinitialize = {true}
+                validationSchema ={validationSchema}
+                validateOnChange = {true}
+                validateOnBlur = {true}
+                onSubmit={handleSubmit}
+                >
+                
+          {
+            ({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              /* and other goodies */
+            }) => (
+              <Form>
+                <Grid container>
+                    <Grid item xs={6}>
+                        <div>
+                        <TextField 
+                            id="firstName"
+                            label="First Name"
+                            value={values.firstName == null ? "" : values.firstName}
+                            name="firstName"
+                            type="text"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          {values.firstName && touched.firstName && <ErrorMessage>{errors.firstName}</ErrorMessage> }
+                        </div>
+                        <div>
+                        <TextField label="Last Name"
+                            value={values.lastName == null ? "" : values.lastName}
+                            name="lastName"
+                            type="text"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          { touched.lastName && <ErrorMessage>{errors.lastName}</ErrorMessage>}
+                        </div>
+                        <div>
+                        <TextField label="Phone Number"
+                            value={values.phoneNumber == null ? "" : values.phoneNumber}
+                            name="phoneNumber"
+                            type="text"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          { values.phoneNumber && touched.phoneNumber && <ErrorMessage>{errors.phoneNumber}</ErrorMessage>}
+                        </div>
+                        <div>
+                        <TextField 
+                          
+                            label="Email"
+                            value={values.email == null ? "" : values.email}
+                            name="email"
+                            type="text"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          {touched.email &&  <ErrorMessage>{errors.email}</ErrorMessage>}
+                        </div>
+                    </Grid>
+                    <Grid item xs={6}>
+                        <div>
+                        <TextField label="Line"
+                            value={values.address?.line == null ? "" : values.address?.line}
+                            name="address.line"
+                            type="text"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          { touched.address?.line && <ErrorMessage>{errors.address?.line}</ErrorMessage>}
+                        </div>
+                        <div>
+                        <TextField label="City"
+                            value={values.address?.city == null ? "" : values.address?.city}
+                            name="address.city"
+                            type="text"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          { touched.address?.city && <ErrorMessage>{errors.address?.city}</ErrorMessage>}
+                        </div>
+                        <div>
+                        <TextField label="Country"
+                            value={values.address?.country == null ? "" : values.address?.country}
+                            name="address.country"
+                            type="text"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          {touched.address?.country && <ErrorMessage>{errors.address?.country}</ErrorMessage>}
+                        </div>
+                    </Grid>
+                </Grid>
+                <Button type='submit' sx={{padding:"10px", background:"green", color:"black", margin:"20px 0px 20px 0px", width:"40%"}
+                  }>
+                  Submit
+                </Button>
+              </Form>
+            )
+          }
+        </Formik>
     </div>
   )
 }

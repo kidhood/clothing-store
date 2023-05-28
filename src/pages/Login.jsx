@@ -4,6 +4,10 @@ import styled from "styled-components";
 import { useAuth } from "../components/security/AuthContext";
 import { Google} from "@mui/icons-material";
 import { GOOGLE_AUTH_URL } from "../constants/Url.js";
+import * as Yup from 'yup';
+import { Grid, TextField } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import { Form, Formik } from "formik";
 // import { GOOGLE_AUTH_URL } from '../constants'
 
 const Container = styled.div`
@@ -33,13 +37,11 @@ const Title = styled.h1`
 `;
 
 const ErrorMessage = styled.div`
-  
+    margin-top: 0;
+  font-size: 14px;
+  color: red;
 `
 
-const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
 
 const Input = styled.input`
   flex: 1;
@@ -49,13 +51,14 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  width: 100%;
+  border-radius: 20px;
+  width: 80%;
   border: none;
   padding: 15px 20px;
   background-color: teal;
   color: white;
   cursor: pointer;
-  margin-bottom: 10px;
+  margin: 10px auto;
 `;
 
 const LinkCus = styled.a`
@@ -67,16 +70,17 @@ const LinkCus = styled.a`
 `;
 
 const SocialButton = styled.div`
-  min-width: 40%;
+  min-width: 70%;
   border: 1px solid lightgrey;
-  border-radius: 10px;
-  padding: 15px 20px;
+  border-radius: 20px;
+  padding: 10px 20px;
   text-align: center;
   background-color: lightgrey;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 10px auto;
 `
 
 const SocialLogin = styled.a`
@@ -92,18 +96,26 @@ const Login = () => {
 
   const authContext = useAuth()
 
-  const [username, setUsername] = useState('')
+  const validationSchema = Yup.object({
+    username: Yup.string()
+      .trim()
+      .strict(true)
+      .min(5, 'Your user name must be at least 5 characters!')
+      .max(25, 'Your user name must be under 25 characters!')
+      .required('You must fill in this section!'),
+    password: Yup.string()
+      .min(5, 'Your password must be at least 5 characters!')
+      .max(25, 'Your password must be under 25 characters!')
+      .required('You must fill in this section!'),
+  });
 
-  const [passowrd, setPassword] = useState('')
 
-  const [showErrorMessage, setShowErrorMessage] = useState(false)
-
-
-  async function handleSubmit(){
-    if(await authContext.login(username, passowrd) ){
+  async function handleSubmit(values){
+    console.log(values)
+    if(await authContext.login(values.username, values.password) ){
         navigate('/home')
     }else{
-      setShowErrorMessage(true)
+      
     }
   }
 
@@ -112,19 +124,76 @@ const Login = () => {
     <Container>
       <Wrapper>
         <Title>SIGN IN</Title>
-        {showErrorMessage && <ErrorMessage>Authentication Failed. 
-                                                            Please check your credentials.</ErrorMessage>}
-        <Form>
-          <Input placeholder="username" onChange={(e) => setUsername(e.target.value)}/>
-          <Input placeholder="password" onChange={(e) => setPassword(e.target.value)} />
-          <Button onClick={handleSubmit}>LOGIN</Button>
-          <SocialButton>
-            <Google />
-            <SocialLogin href={GOOGLE_AUTH_URL}>Login With Google</SocialLogin>
-          </SocialButton>
-          <LinkCus><Link>DO YOU NOT REMEMBER THE PASSWORD?</Link></LinkCus>
-          <LinkCus><Link to="/register">CREATE A NEW ACCOUNT</Link></LinkCus>
-        </Form>
+        <ToastContainer 
+            position="top-center"
+            autoClose={1000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            />
+        <Formik initialValues={{username:"",password:""}}
+                // enableReinitialize = {true}
+                validationSchema ={validationSchema}
+                validateOnChange = {true}
+                validateOnBlur = {true}
+                onSubmit={handleSubmit}
+                >
+                
+          {
+            ({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              isSubmitting,
+              /* and other goodies */
+            }) => (
+              
+              <Form>
+                <Grid container>
+                        <div>
+                        <TextField label="User Name"
+                            value={values.username == null ? "" : values.username}
+                            name="username"
+                            type="text"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"120%"}}/>
+                          { values.username && touched.username && <ErrorMessage>{errors.username}</ErrorMessage>}
+                        </div>
+                        <div>
+                        <TextField 
+                            label="Password"
+                            value={values.password == null ? "" : values.password}
+                            name="password"
+                            type="password"
+                            onChange={ handleChange}
+                            onBlur={handleBlur}
+                            sx={{margin: "20px 20px 0 20px",width:"120%"}}/>
+                          {touched.password &&  <ErrorMessage>{errors.password}</ErrorMessage>}
+                        </div>
+                      <Button type='submit'>
+                        Login
+                      </Button>
+                        <SocialButton>
+                        <Google />
+                        <SocialLogin href={GOOGLE_AUTH_URL}>Login With Google</SocialLogin>
+                      </SocialButton>
+                      <LinkCus><Link>DO YOU NOT REMEMBER THE PASSWORD?</Link></LinkCus>
+                      <LinkCus><Link to="/register">CREATE A NEW ACCOUNT</Link></LinkCus>
+                </Grid>
+              </Form>
+              
+            )
+          }
+        </Formik>
       </Wrapper>
     </Container>
   );

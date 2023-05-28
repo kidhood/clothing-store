@@ -3,6 +3,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { useAuth } from './security/AuthContext'
+import { ToastContainer, toast } from 'react-toastify'
 
 const Info = styled.div`
     opacity: 0;
@@ -78,12 +79,37 @@ const Product = ({item}) => {
         navigate(`/products/${id}`)
     }
 
+    const hanldeAdd = () => {
+        toast.success('Add to cart success!', {
+            position: "top-right",
+            autoClose: 250,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+            });
+        }
+
   return (
     <Container>
+        <ToastContainer
+          position="top-right"
+          autoClose={250}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          />
         <Circle/>
         <Image src={item.imageUrl} />
         <Info>
-            <Icon onClick={ () => authContext.addToCart(item, 'M', 1)}>
+            <Icon onClick={ () => {authContext.addToCart(item, 'M', 1) ;hanldeAdd()}}>
                 <ShoppingCartOutlined/>
             </Icon>
             <Icon onClick={ () => showMoreInfor(item.productID) }>

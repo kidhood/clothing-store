@@ -1,18 +1,18 @@
 import React from 'react'
 import { TextFields } from '@mui/icons-material';
+import { useField } from 'formik';
 
-export default function Input(props) {
+export default function Input({ label, ...props }) {
 
-    const { name, label, value,onChange } = props;
+    const [field, meta] = useField(props);
+    console.log(field)
     return (
-        <TextFields
-            id="outlined-basic"
-            variant="outlined"
+        // <div>
+          <TextFields
             label={label}
-            name={name}
-            value={value}
-            onChange={onChange}
-            // {...(error && {error:true,helperText:error})}
-        />
-    )
-}
+            {...field}
+            {...props}
+            
+          />
+      );
+};

@@ -219,6 +219,17 @@ const CartProduct = () => {
     }
   }
 
+  const handleCheckOut =() => {
+    const cartItem = {
+      productId: "",
+      amount: 0,
+      size: ""
+    }
+    // carts.map(cart => {
+    //     cartItem.productId = cart.produ
+    // } )
+  }
+
   return (
     <Container>
       <Navbar />
@@ -256,7 +267,7 @@ const CartProduct = () => {
                   </ProductDetail>
                   <PriceDetail>
                     <ProductAmountContainer>
-                      <ButtonRemove onClick={() => handleIncrease(item)} mar="none">
+                      <ButtonRemove onClick={() => {handleIncrease(item)}} mar="none">
                         <Add />
                       </ButtonRemove>
                       <ProductAmount>{ item.amount}</ProductAmount>

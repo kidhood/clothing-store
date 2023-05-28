@@ -34,9 +34,8 @@ export default function AuthProvider({children}){
     }
 
     async function login (username, password){
-        console.log('username : {0} password {1}', username,password)
         try{
-            const response = await executeJwtAuthenticationService(username, password)
+            const response = await executeJwtAuthenticationService(username,password)
             if(response.status == 200){
                 const jwtToken = 'Bearer ' + response.data.token
                 setAuthenticated(true)

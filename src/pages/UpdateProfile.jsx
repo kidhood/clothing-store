@@ -1,10 +1,5 @@
 import * as React from 'react';
 import Paper from '@mui/material/Paper';
-
-import Link from '@mui/material/Link';
-import Typography from '@mui/material/Typography';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { InputRounded } from '@mui/icons-material';
 import styled from 'styled-components';
 import Navbar from '../components/Navbar';
 import { useAuth } from '../components/security/AuthContext';
@@ -26,7 +21,7 @@ const Container = styled.div`
     width: 50%;
     height: 50%;
 `
-const Title = styled.h3`
+const Title = styled.h1`
     
 `
 
@@ -68,20 +63,6 @@ export default function UpdateProfile() {
 
   const username = authContext.username
 
-  const [firstName, setFirstName] = React.useState('')
-
-  const [lastName, setLastName] = React.useState('')
-
-  const [email, setEmail] = React.useState('')
-
-  const [phone, setPhone] = React.useState('')
-
-  const [line, setLine] = React.useState('')
-
-  const [city, setCity] = React.useState('')
-
-  const [country, setCountry] = React.useState('')
-
   const [customer, setCustomer] = React.useState('')
 
   React.useEffect( () => {refreshCustomer()}, [username])
@@ -109,24 +90,6 @@ export default function UpdateProfile() {
         <Container >
             <Title>Update Profile</Title>
             <Paper>
-                {/* <TwoInput>
-                    <InputLeft placeholder='First Name' onChange={ (e) => setFirstName(e.target.value)} />
-                    <InputRight placeholder='Last Name' onChange={ (e) => setLastName(e.target.value)}/>
-                </TwoInput>
-                <TwoInput>
-                    <InputLeft placeholder='Email' onChange={ (e) => setEmail(e.target.value)}/>
-                    <InputRight placeholder='Phone Number' onChange={ (e) => setPhone(e.target.value)}/>
-                </TwoInput>
-                <TwoInput>
-                    <InputLeft placeholder='Line' onChange={ (e) => setLine(e.target.value)} />
-                    <InputRight placeholder='City'onChange={ (e) => setCity(e.target.value)}/>
-                </TwoInput>
-                <TwoInput>
-                    <InputLeft placeholder='Country' onChange={ (e) => setCountry(e.target.value)}/>
-                </TwoInput>
-                <TwoInput>
-                    <Button onClick={handleUpdateProfile}>Update Profile</Button>
-                </TwoInput>    */}
                 <CustomerInforForm customer = {customer}/>
             </Paper>
         </Container> 

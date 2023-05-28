@@ -8,6 +8,7 @@ import { Add, Remove } from "@mui/icons-material";
 import { retrieveProductById} from "../components/api/ProductApiService";
 import { useParams } from 'react-router-dom';
 import { useAuth } from '../components/security/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const Container = styled.div``;
@@ -166,10 +167,34 @@ const Button = styled.button`
     }
   }
 
+  const hanldeAdd = () => {
+    toast.success('Add to cart success!', {
+      position: "top-right",
+      autoClose: 250,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      });
+  }
+
 
   return (
     <Container>
-      <Announcement />
+      <ToastContainer
+          position="top-right"
+          autoClose={250}
+          hideProgressBar
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+          />
       <Navbar />
       <Wrapper>
         <ImgContainer>
@@ -217,7 +242,11 @@ const Button = styled.button`
                 <Add />
               </Button>
             </AmountContainer>
-            <Button onClick={ () => authContext.addToCart(product, size === "" ? 'M' : size,amount  )}>ADD TO CART</Button>
+            <Button onClick={ () => {authContext.addToCart(product, size === "" ? 'M' : size,amount  )
+                            hanldeAdd()}
+                            }>
+                ADD TO CART
+              </Button>
           </AddContainer>
         </InfoContainer>
       </Wrapper>
