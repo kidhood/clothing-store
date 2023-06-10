@@ -44,3 +44,6 @@ The application will now be running locally, and you can access it through your 
 This project was created by kidhood (Nguyễn Văn Thống). Contributions to the project are welcome. Feel free to submit bug reports, feature requests, or pull requests to enhance the functionality of the clothing store project.
 
 If you have any questions or need further assistance, please don't hesitate to contact us.
+
+[![](https://img.shields.io/badge/Email-vanthong07012002@gmail.com-blue?style=flat-square&logo=gmail)](mailto:vanthong07012002@gmail.com)
+[![](https://img.shields.io/badge/LinkedIn-linkedin.com/in/kidhood-blue?style=flat-square&logo=linkedin&logoColor=white)](https://linkedin.com/in/kidhood/)
