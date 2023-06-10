@@ -24,7 +24,7 @@ This is a full stack clothing store project that includes both the frontend and 
 
 ## Installation and Setup
 
-1. Clone the repository: `git clone [<repository-url>](https://github.com/kidhood/clothing-store)`
+1. Clone the repository: `git clone https://github.com/kidhood/clothing-store`
 2. Navigate to the project directory: `cd clothing-store-project`
 3. Set up the MySQL database and configure the connection details in the project's configuration files.
 4. Obtain the necessary credentials and configuration for OAuth2 with Google.
