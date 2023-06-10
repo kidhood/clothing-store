@@ -1,70 +1,46 @@
-# Getting Started with Create React App
+# Full Stack Clothing Store Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is a full stack clothing store project that includes both the frontend and backend implementations. The frontend is developed using ReactJS with Material UI for UI components, while the backend is built with Spring Boot, utilizing Spring Data JPA and Spring Security. The project also integrates MySQL as the database management system. The application incorporates security features, including JWT (JSON Web Token) and OAuth2 for Google login.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- User Authentication: Users can register, log in, and manage their accounts securely.
+- Product Catalog: The application provides a catalog of clothing products for users to browse and search.
+- Shopping Cart: Users can add products to their shopping cart, review the cart, and proceed to checkout.
+- Order Management: The system allows users to place orders and track their order history.
+- Security with JWT: JSON Web Tokens are used for authentication and authorization, ensuring secure access to protected resources.
+- OAuth2 with Google: Users have the option to log in using their Google accounts, leveraging OAuth2 for seamless integration.
 
-### `npm start`
+## Technologies Used
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- ReactJS
+- Material UI
+- Spring Boot
+- Spring Data JPA
+- Spring Security
+- MySQL
+- JWT
+- OAuth2
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation and Setup
 
-### `npm test`
+1. Clone the repository: `git clone <repository-url>`
+2. Navigate to the project directory: `cd clothing-store-project`
+3. Set up the MySQL database and configure the connection details in the project's configuration files.
+4. Obtain the necessary credentials and configuration for OAuth2 with Google.
+5. Build and run the backend application using Maven or your preferred IDE.
+6. Navigate to the frontend directory: `cd frontend`
+7. Install the required dependencies: `npm install`
+8. Start the frontend development server: `npm start`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The application will now be running locally, and you can access it through your web browser.
 
-### `npm run build`
+## API Documentation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+[Provide a link to the API documentation if available.]
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contributors
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+This project was created by kidhood (Nguyễn Văn Thống). Contributions to the project are welcome. Feel free to submit bug reports, feature requests, or pull requests to enhance the functionality of the clothing store project.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+If you have any questions or need further assistance, please don't hesitate to contact us.
