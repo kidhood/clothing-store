@@ -2,6 +2,12 @@
 
 This is a full stack clothing store project that includes both the frontend and backend implementations. The frontend is developed using ReactJS with Material UI for UI components, while the backend is built with Spring Boot, utilizing Spring Data JPA and Spring Security. The project also integrates MySQL as the database management system. The application incorporates security features, including JWT (JSON Web Token) and OAuth2 for Google login.
 
+## Demo
+
+![Web_demo](img/login_page.png "Clothing store")
+![Web_demo](img/home_page.png "Clothing store")
+![Web_demo](img/cart_page.png "Clothing store")
+
 ## Features
 
 - User Authentication: Users can register, log in, and manage their accounts securely.
