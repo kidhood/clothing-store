@@ -6,6 +6,10 @@ import { Add, Remove } from "@mui/icons-material";
 import { useAuth } from "../components/security/AuthContext";
 import {  useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { checkOut } from "../components/api/OrderApiService";
+import { ToastContainer, toast } from "react-toastify";
+import { FormControlLabel, FormLabel, Radio, RadioGroup, Typography } from "@mui/material";
+import { green } from "@mui/material/colors";
 
 const Container = styled.div``;
 
@@ -172,7 +176,6 @@ const CartProduct = () => {
 
   const carts = authContext.cart
 
-
   const setCart = authContext.setCart
 
   const navigate = useNavigate()
@@ -181,7 +184,7 @@ const CartProduct = () => {
 
   const taxPrice = itemsPrice * 0.14;
 
-  const shippingPirce = itemsPrice > 1000 ? 0 : 5;
+  const shippingPirce = itemsPrice > 1000 ? 0 : itemsPrice * 0.01;
 
   const totalPrice = itemsPrice + taxPrice + shippingPirce;
 
@@ -191,6 +194,7 @@ const CartProduct = () => {
   }
 
   const handleIncrease = (product) => {
+    console.log(carts)
     const exist = carts.find((x)  => x.id === product.id)
     setCart(
       carts.map( (x) => 
@@ -220,20 +224,69 @@ const CartProduct = () => {
   }
 
   const handleCheckOut =() => {
-    const cartItem = {
-      productId: "",
-      amount: 0,
-      size: ""
+    if(authContext.isAuthenticated){
+      const transformedCarts = carts.map(cart => {
+        const cartItem = {
+          productId: cart.productID,
+          amount: cart.amount,
+          size: cart.sizes
+        };
+        return cartItem;
+      });
+      checkOut(transformedCarts)
+        .then(response => console.log(response))
+        .catch(error => console.log(error))
+      console.log(transformedCarts);
+    }else{
+      setTimeout( () => {
+        notify(400,"")
+      },100)
+      navigate('/login')
     }
-    // carts.map(cart => {
-    //     cartItem.productId = cart.produ
-    // } )
+  }
+
+  function notify (status, message) {
+    if(status == 202 || status == 200){
+        toast.success('🦄' + message, {
+            position: "top-center",
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+    }else if(status == 400 || status == 500){
+        toast.error('🦄 Please login to checkout order! ', {
+            position: "top-center",
+            autoClose: 1000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            });
+    }
   }
 
   return (
+    <>
     <Container>
       <Navbar />
-      <Announcement />
+      <ToastContainer 
+            position="top-center"
+            autoClose={1000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="light"
+            />
       <Wrapper>
         <Title>YOUR BAG</Title>
         <Top>
@@ -242,7 +295,7 @@ const CartProduct = () => {
             <TopText>Shopping Bag({ carts.length})</TopText>
             <TopText>Your Wishlist (0)</TopText>
           </TopTexts>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
+          <TopButton type="filled" onClick={handleCheckOut}>CHECKOUT NOW</TopButton>
         </Top>
         <Bottom>
           <Info>
@@ -311,12 +364,24 @@ const CartProduct = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>$ {totalPrice.toFixed(2)}</SummaryItemPrice>
             </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
+            <FormLabel id="demo-radio-buttons-group-label">Payment method</FormLabel>
+                <RadioGroup
+                  aria-labelledby="demo-radio-buttons-group-label"
+                  defaultValue="female"
+                  name="radio-buttons-group"
+                >
+                    <FormControlLabel value="vnpay" control={<Radio />} label= 
+                              {<Typography sx={{fontSize: 14}}>VN PAY</Typography>} />
+                    <FormControlLabel value="cod" control={<Radio />} label= 
+                              {<Typography sx={{fontSize: 14}}>COD</Typography>} />
+                  </RadioGroup>
+            <Button onClick={handleCheckOut}>CHECKOUT NOW</Button>
           </Summary>
         </Bottom>
       </Wrapper>
-      <Footer />
     </Container>
+    <Footer />
+    </>
   );
 };
 

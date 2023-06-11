@@ -6,7 +6,8 @@ import { changePasswordUser } from "../components/api/UserApiService";
 import { ToastContainer, toast } from "react-toastify";
 import * as Yup from 'yup';
 import { Form, Formik } from "formik";
-import { Button, Grid, TextField } from "@mui/material";
+import { Button,  Grid, TextField } from "@mui/material";
+
 
 const Container = styled.div`
   width: 100vw;
@@ -48,15 +49,11 @@ const Input = styled.input`
   padding: 10px;
 `;
 
-// const Button = styled.button`
-//   width: 100%;
-//   border: none;
-//   padding: 15px 20px;
-//   background-color: teal;
-//   color: white;
-//   cursor: pointer;
-//   margin-bottom: 10px;
-// `;
+const CenterGird = styled.div`
+  display: flex;
+  align-content: center;
+  justify-content: center;
+`
 
 const LinkCus = styled.a`
   margin: 5px 0px;
@@ -171,7 +168,7 @@ function notify (status, message) {
                           type="password"
                           onChange={ handleChange}
                           onBlur={handleBlur}
-                          sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          sx={{margin: "20px 20px 0 20px",width:"90%"}}/>
                         {touched.oldPassword &&  <ErrorMessage>{errors.oldPassword}</ErrorMessage>}
                       </div>
                       <div>
@@ -181,7 +178,7 @@ function notify (status, message) {
                           type="password"
                           onChange={ handleChange}
                           onBlur={handleBlur}
-                          sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          sx={{margin: "20px 20px 0 20px",width:"90%"}}/>
                         { touched.newPassword && <ErrorMessage>{errors.newPassword}</ErrorMessage>}
                       </div>
                       <div>
@@ -191,14 +188,14 @@ function notify (status, message) {
                           type="password"
                           onChange={ handleChange}
                           onBlur={handleBlur}
-                          sx={{margin: "20px 20px 0 20px",width:"80%"}}/>
+                          sx={{margin: "20px 20px 0 20px",width:"90%"}}/>
                         {touched.confirmPassword && <ErrorMessage>{errors.confirmPassword}</ErrorMessage>}
                       </div>
-                    <div>
-                      <Button type='submit' sx={{width:"100%", padding:"10px", marginTop:"10px", backgroundColor:"black", color:"white"}}>
+                    <CenterGird> 
+                      <Button type='submit' sx={{width:"80%", padding:"10px", marginTop:"10px", backgroundColor:"black", color:"white"}}>
                           Submit
                       </Button>
-                    </div>
+                    </CenterGird>
                 </Grid>
               </Form>
             )

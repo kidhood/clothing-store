@@ -61,6 +61,11 @@ const Button = styled.button`
   margin: 10px auto;
 `;
 
+const LoginButton = styled.div`
+  margin-top: 10px;
+  display: flex;
+`
+
 const LinkCus = styled.a`
   margin: 5px 0px;
   font-size: 12px;
@@ -70,7 +75,7 @@ const LinkCus = styled.a`
 `;
 
 const SocialButton = styled.div`
-  min-width: 70%;
+  max-width: 70%;
   border: 1px solid lightgrey;
   border-radius: 20px;
   padding: 10px 20px;
@@ -84,6 +89,7 @@ const SocialButton = styled.div`
 `
 
 const SocialLogin = styled.a`
+
   text-decoration: none;
   color: black;
   margin-left: 10px;
@@ -157,7 +163,7 @@ const Login = () => {
             }) => (
               
               <Form>
-                <Grid container>
+                <Grid>
                         <div>
                         <TextField label="User Name"
                             value={values.username == null ? "" : values.username}
@@ -165,7 +171,7 @@ const Login = () => {
                             type="text"
                             onChange={ handleChange}
                             onBlur={handleBlur}
-                            sx={{margin: "20px 20px 0 20px",width:"120%"}}/>
+                            sx={{margin: "20px 20px 0 20px",width:"90%"}}/>
                           { values.username && touched.username && <ErrorMessage>{errors.username}</ErrorMessage>}
                         </div>
                         <div>
@@ -176,12 +182,14 @@ const Login = () => {
                             type="password"
                             onChange={ handleChange}
                             onBlur={handleBlur}
-                            sx={{margin: "20px 20px 0 20px",width:"120%"}}/>
+                            sx={{margin: "20px 20px 0 20px",width:"90%"}}/>
                           {touched.password &&  <ErrorMessage>{errors.password}</ErrorMessage>}
                         </div>
-                      <Button type='submit'>
-                        Login
-                      </Button>
+                        <LoginButton>
+                            <Button type='submit'>
+                            Login
+                          </Button>
+                        </LoginButton>
                         <SocialButton>
                         <Google />
                         <SocialLogin href={GOOGLE_AUTH_URL}>Login With Google</SocialLogin>

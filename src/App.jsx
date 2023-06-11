@@ -9,6 +9,7 @@ import AuthProvider, { useAuth } from "./components/security/AuthContext";
 import ChangePassword from "./pages/ChangePassword";
 import UpdateProfile from "./pages/UpdateProfile";
 import OAuth2RedirectHandler from "./components/user/oauth2/OAuth2RedirectHandler";
+import TestGetCookie from "./pages/TestGetCookie";
 
 
 function AuthenticatedRoute({children}) {
@@ -51,9 +52,10 @@ const App = () => {
                                                             <UpdateProfile/>  
                                                         </AuthenticatedRoute>
                                                         }/>
-
+            
             <Route path="/oauth2/redirect" element= {<OAuth2RedirectHandler/>}/>
-
+            
+            <Route path="/getcookie" element={<TestGetCookie></TestGetCookie>}></Route>
           </Routes>
 
         </BrowserRouter>
